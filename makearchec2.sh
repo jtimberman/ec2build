@@ -62,6 +62,8 @@ USELVM="no"
 HOSTNAME="myhost"
 eth0="dhcp"
 INTERFACES=(eth0)
+gateway="default gw 192.168.0.1"
+ROUTES=(!gateway)
 DAEMONS=(syslog-ng network sshd crond ec2)
 EOF
 
