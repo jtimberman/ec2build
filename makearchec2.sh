@@ -16,24 +16,24 @@ ROOT=arch_$ARCH
 PACKS="filesystem pacman sed coreutils ca-certificates groff \
         less which procps logrotate syslog-ng net-tools initscripts psmisc nano vi \
         iputils tar sudo mailx dhcpcd openssh kernel26-ec2 kernel26-ec2-headers \
-        wget curl screen bash-completion ca-certificates man-db kernel26-ec2 \
+        wget curl screen bash-completion ca-certificates kernel26-ec2 \
 	kernel26-ec2-headers ec2-metadata btrfs-progs-git zsh ec2arch vim vimpager \
-	vim-colorsamplerpack cpio dnsutils"
+	vim-colorsamplerpack cpio dnsutils base-devel devtools srcpac abs \
+	lesspipe ssmtp iproute2"
 
 cat <<EOF > pacman.conf
 [options]
 HoldPkg     = pacman glibc
 SyncFirst   = pacman
 Architecture = $ARCH
-
+[ec2]
+Server = file:///root/repo
 [core]
 Include = /etc/pacman.d/mirrorlist
 [extra]
 Include = /etc/pacman.d/mirrorlist
 [community]
 Include = /etc/pacman.d/mirrorlist
-[local]
-Server = file:///root/repo
 EOF
 
 LC_ALL=C mkarchroot -C pacman.conf $ROOT $PACKS
@@ -123,18 +123,19 @@ none /dev/pts devpts defaults 0 0
 none /dev/shm tmpfs nodev,nosuid 0 0
 EOF
 
+mv $ROOT/etc/makepkg.conf $ROOT/etc/makepkg.conf.pacorig
+cp /etc/makepkg.conf $ROOT/etc/
+
+mkdir $ROOT/opt/{sources,packages,srcpackages}
+chmod 1777 $ROOT/opt/{sources,packages,srcpackages}
+
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> $ROOT/etc/sudoers
 sed -i 's/bash/zsh/' $ROOT/etc/passwd
 curl -o $ROOT/root/.zshrc  "http://github.com/MrElendig/dotfiles-alice/raw/master/.zshrc"
-cat <<EOF >$ROOT/root/.vimrc
-set nocompatible
-set nobackup
-syntax on
-colorscheme railscasts
-set mouse=a
-EOF
+curl -o $ROOT/root/.vimrc "http://github.com/MrElendig/dotfiles-alice/raw/master/.vimrc"
 
 touch $ROOT/root/firstboot
 cp -a /root/repo $ROOT/root/
 cp -a /var/cache/pacman/pkg/. $ROOT/var/cache/pacman/pkg/
-FILENAME=archlinux-$EC2_ARCH-$(date +%G%m%d).tar.xz
+
+#FILENAME=archlinux-$EC2_ARCH-$(date +%G%m%d).tar.xz
