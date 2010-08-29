@@ -13,6 +13,9 @@ fi
 
 ROOT=arch_$ARCH
 
+EBSDEVICE=/dev/xvdf
+
+
 PACKS="filesystem pacman sed coreutils ca-certificates groff \
         less which procps logrotate syslog-ng net-tools initscripts psmisc nano vi \
         iputils tar sudo mailx dhcpcd openssh kernel26-ec2 kernel26-ec2-headers \
@@ -107,8 +110,8 @@ cp $ROOT/etc/skel/.screenrc $ROOT/root
 mv $ROOT/etc/fstab $ROOT/etc/fstab.pacorig
 
 cat <<EOF >$ROOT/etc/fstab
-/dev/xvda2 /     auto    defaults,relatime 0 1
-/dev/xvda1 /boot auto    defaults,noauto,relatime 0 0
+$(blkid -c /dev/null -s UUID -o export ${EBSDEVICE}2) /     auto    defaults,compress,relatime 0 1
+$(blkid -c /dev/null -s UUID -o export ${EBSDEVICE}1) /boot auto    defaults,noauto,relatime 0 0
 /dev/xvdb /tmp  auto    defaults,relatime 0 0
 /dev/xvda3 swap  swap   defaults 0 0
 none      /proc proc    nodev,noexec,nosuid 0 0
