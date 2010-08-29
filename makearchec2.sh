@@ -35,7 +35,12 @@ mkdir ${NEWROOT}
 mount -o compress ${EBSDEVICE}2 ${NEWROOT}
 chmod 755 ${NEWROOT}
 mkdir ${NEWROOT}/boot
-btrfs subvolume create ${NEWROOT}/{home,etc,srv,var,opt,usr}
+btrfs subvolume create ${NEWROOT}/home
+btrfs subvolume create ${NEWROOT}/etc
+btrfs subvolume create ${NEWROOT}/srv
+btrfs subvolume create ${NEWROOT}/var
+btrfs subvolume create ${NEWROOT}/opt
+btrfs subvolume create ${NEWROOT}/usr
 
 PACKS="filesystem pacman sed coreutils ca-certificates groff \
         less which procps logrotate syslog-ng net-tools initscripts psmisc nano vi \
