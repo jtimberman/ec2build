@@ -14,11 +14,32 @@ fi
 ROOT=arch_$ARCH
 
 EBSDEVICE=/dev/xvdf
+NEWROOT=/mnt/newroot
+fsdisk ${EBSDEVICE} <<EOF
+n
+p
 
+
++100M
+n
+p
+
+
+
+w
+EOF
+
+mkfs.ext3 ${EBSDEVICE}1
+mkfs.btrfs ${EBSDEVICE}2
+mkdir ${NEWROOT}
+mount -o compress ${EBSDEVICE}2 ${NEWROOT}
+chmod 755 ${NEWROOT}
+mkdir ${NEWROOT}/boot
+btrfs subvolume create ${NEWROOT}/{home,etc,srv,var,opt,usr}
 
 PACKS="filesystem pacman sed coreutils ca-certificates groff \
         less which procps logrotate syslog-ng net-tools initscripts psmisc nano vi \
-        iputils tar sudo mailx dhcpcd openssh kernel26-ec2 kernel26-ec2-headers \
+        iputils tar sudo mailx openssh kernel26-ec2 kernel26-ec2-headers \
         wget curl screen bash-completion ca-certificates kernel26-ec2 \
 	kernel26-ec2-headers ec2-metadata btrfs-progs-git zsh ec2arch vim vimpager \
 	vim-colorsamplerpack cpio dnsutils base-devel devtools srcpac abs \
