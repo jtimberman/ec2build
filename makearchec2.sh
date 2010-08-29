@@ -15,7 +15,7 @@ ROOT=arch_$ARCH
 
 EBSDEVICE=/dev/xvdf
 NEWROOT=/mnt/newroot
-fsdisk ${EBSDEVICE} <<EOF
+fdisk ${EBSDEVICE} <<EOF
 n
 p
 
