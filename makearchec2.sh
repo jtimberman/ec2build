@@ -54,17 +54,10 @@ mv $ROOT/etc/rc.conf $ROOT/etc/rc.conf.pacorig
 cat <<EOF >$ROOT/etc/rc.conf
 LOCALE="en_US.UTF-8"
 TIMEZONE="UTC"
-KEYMAP="us"
 MOD_AUTOLOAD="no"
 USECOLOR="yes"
-MODULES=()
 USELVM="no"
-HOSTNAME="myhost"
-eth0="dhcp"
-INTERFACES=(eth0)
-gateway="default gw 192.168.0.1"
-ROUTES=(!gateway)
-DAEMONS=(syslog-ng network sshd crond ec2)
+DAEMONS=(syslog-ng sshd crond ec2)
 EOF
 
 mv $ROOT/etc/inittab $ROOT/etc/inittab.pacorig
@@ -93,9 +86,9 @@ timeout 1
 
 title  Arch Linux
 	root   (hd0,0)
-	kernel /vmlinuz26-ec2 root=/dev/xvda2 spinlock=tickless ro
-	initrd /kernel26-ec2.img
+	kernel /vmlinuz26-ec2 root=/dev/xvda2 ip=dhcp spinlock=tickless ro
 EOF
+
 cd $ROOT/boot
 ln -s boot/grub .
 cd ../..
@@ -133,6 +126,9 @@ echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> $ROOT/etc/sudoers
 sed -i 's/bash/zsh/' $ROOT/etc/passwd
 curl -o $ROOT/root/.zshrc  "http://github.com/MrElendig/dotfiles-alice/raw/master/.zshrc"
 curl -o $ROOT/root/.vimrc "http://github.com/MrElendig/dotfiles-alice/raw/master/.vimrc"
+
+mv $ROOT/etc/resolv.conf $ROOT/etc/resolv.conf.pacorig
+echo "nameserver 172.16.0.23" > $ROOT/etc/resolv.conf
 
 touch $ROOT/root/firstboot
 cp -a /root/repo $ROOT/root/
