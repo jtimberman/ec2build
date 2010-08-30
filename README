@@ -12,9 +12,10 @@ Step 5: Make snapshot of your finished EBS volume.
 Step 6: Register your ami
 
  i386:
-   ec2-register -C cert-.pem -K pk-.pem -a x86_64 -b /dev/sdb=ephemeral0 -b /dev/sdc=ephemeral1 \
+   ec2-register -C cert-.pem -K pk-.pem -a i386 -b /dev/sdb=ephemeral0 -b /dev/sdc=ephemeral1 \
        --root-device-name /dev/sda --kernel aki-4c7d9525 -n aminame -s snap-id
 
  x86_64:
    ec2-register -C cert-.pem -K pk-.pem -a x86_64 -b /dev/sdb=ephemeral0 -b /dev/sdc=ephemeral1 \
-       -b /dev/sdd=ephemeral2 -b /dev/sde=ephemeral3 --root-device-name /dev/sda --kernel aki-4e7d9527 -n aminame -s snap-id
+       -b /dev/sdd=ephemeral2 -b /dev/sde=ephemeral3 --root-device-name /dev/sda \
+       --kernel aki-4e7d9527 -n aminame -s snap-id
