@@ -1,4 +1,4 @@
-Step 1: Compile kernel26-ec2-headers ec2-metadata btrfs-progs-git from AUR
+Step 1: Compile kernel26-ec2-headers ec2-metadata btrfs-progs-git ec2arch from AUR
 
 Step 2: Copy compiled packages to /root/repo
         repo-add ec2.db.tar.gz *.pkg.*
