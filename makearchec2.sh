@@ -11,10 +11,10 @@ else
   EC2_ARCH=x86_64
 fi
 
-ROOT=arch_$ARCH
-
-EBSDEVICE=/dev/xvdf
+ROOT=/tmp/arch_$ARCH
+EBSDEVICE=/dev/xvdg
 NEWROOT=/mnt/newroot
+
 fdisk ${EBSDEVICE} <<EOF
 n
 p
@@ -35,6 +35,7 @@ mkdir ${NEWROOT}
 mount -o compress ${EBSDEVICE}2 ${NEWROOT}
 chmod 755 ${NEWROOT}
 mkdir ${NEWROOT}/boot
+mount ${EBSDEVICE}1 ${NEWROOT}/boot
 btrfs subvolume create ${NEWROOT}/home
 btrfs subvolume create ${NEWROOT}/etc
 btrfs subvolume create ${NEWROOT}/srv
@@ -163,4 +164,6 @@ touch $ROOT/root/firstboot
 cp -a /root/repo $ROOT/root/
 cp -a /var/cache/pacman/pkg/. $ROOT/var/cache/pacman/pkg/
 
-#FILENAME=archlinux-$EC2_ARCH-$(date +%G%m%d).tar.xz
+cd $ROOT
+find . -depth -print | cpio -pdmv --sparse $NEWROOT
+
