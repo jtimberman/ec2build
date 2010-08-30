@@ -166,4 +166,5 @@ cp -a /var/cache/pacman/pkg/. $ROOT/var/cache/pacman/pkg/
 
 cd $ROOT
 find . -depth -print | cpio -pdmv --sparse $NEWROOT
-
+umount ${NEWROOT}/boot
+umount ${NEWROOT}
